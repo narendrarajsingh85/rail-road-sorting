@@ -52,7 +52,9 @@
         "@bootcamp/root-config": "//localhost:9000/bootcamp-root-config.js",
         "@bootcamp/navbar": "//localhost:9003/bootcamp-navbar.js",
         "@bootcamp/styleguide": "//localhost:9002/bootcamp-styleguide.js",
-        "@bootcamp/receiver": "//localhost:9004/bootcamp-receiver.js"
+        "@bootcamp/receiver": "//localhost:9005/bootcamp-receiver.js",
+        "@bootcamp/destination":"//localhost:9004/bootcamp-destination.js",
+        "@bootcamp/car":"//localhost:9006/bootcamp-destination.js"
       }
     }
   </script>
@@ -80,6 +82,12 @@
       <div class="main-content mt-16">
         <route path="receiver">
           <application name="@bootcamp/receiver"></application>
+        </route>
+        <route path="destination">
+          <application name="@bootcamp/destination"></application>
+        </route>
+        <route path="car">
+          <application name="@bootcamp/car"></application>
         </route>
       </div>
     </single-spa-router>
