@@ -1,15 +1,15 @@
 import React, { useReducer, useEffect, useState } from "react";
-import { getDestinations, addDestination, getDestination } from "../utils/api";
-import DestinationsList from "./destinations-list";
-import { DESTINATION_BASE_URL } from "../api-constants";
-import SelectedDestination from "./destination-details";
+import CarsList from "./cars-list";
+import { CAR_BASE_URL } from "../api-constants";
+import SelectedDestination from "./car-details";
 import Button from "../utils/button.component";
-import Destination from "./destination";
+import Car from "./car";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
+import SelectedCar from "./car-details";
 
 export default function LandingPage(props) {
   const [reload, setReload] = useState(true);
@@ -19,20 +19,20 @@ export default function LandingPage(props) {
   const [type, setType] = useState("selected");
   const [fetch, setFetch] = useState(true);
   const [path, setPath] = useState("");
-  const [destinations, setDestinations] = useState([]);
+  const [cars, setCars] = useState([]);
 
   const { pathname } = props.location;
   const { history } = props;
   const { isLoading, data, refetch, isFetched } = useQuery(
-    "getDestinations",
+    "getCars",
     async () => {
-      return await axios.get("http://localhost:8081/destination");
+      return await axios.get("http://localhost:8081/car/sort");
     },
     {
       enabled: false,
       onSuccess: (data) => {
         console.log(data.data);
-        setDestinations(data.data);
+        setCars(data.data);
       },
     }
   );
@@ -56,28 +56,28 @@ export default function LandingPage(props) {
   }, [pathname]);
 
   const create = () => {
-    history.push("/destination/create");
+    history.push("/car/create");
   };
 
   const update = () => {
-    history.push("/destination/update");
+    history.push("/car/update");
   };
 
-  const addDestination = async (destination) => {
-    return await axios.post("http://localhost:8081/destination", destination);
+  const addCar = async (car) => {
+    return await axios.post("http://localhost:8081/car", car);
   };
 
-  const useAddDestination = () => {
-    return useMutation(addDestination);
+  const useAddCar = () => {
+    return useMutation(addCar);
   };
 
-  const { mutate: addData } = useAddDestination();
+  const { mutate: addData } = useAddCar();
 
   const handleCreate = (value) => {
     if (!isUpdteCall) addData(value);
     else {
     }
-    history.push(DESTINATION_BASE_URL);
+    history.push(CAR_BASE_URL);
     refetch();
   };
 
@@ -88,21 +88,17 @@ export default function LandingPage(props) {
           <Button disabled={isLoading} loading={isLoading} onClick={create}>
             Add Destination
           </Button>
-          <DestinationsList
-            loading={isLoading}
-            data={destinations}
-            onClick={setType}
-          />
+          <CarsList loading={isLoading} data={cars} onClick={setType} />
         </div>
         <div className="w-2/3 p-6 border-l-2 border-white">
           <div className="destination">
             {type === "selected" && (
-              <SelectedDestination
+              <SelectedCar
                 reload={setReload}
-                name={path !== "destination" ? path : ""}
+                name={path !== "car" ? path : ""}
               />
             )}
-            {type === "create" && <Destination handleSubmit={handleCreate} />}
+            {type === "create" && <Car handleSubmit={handleCreate} />}
           </div>
         </div>
       </div>

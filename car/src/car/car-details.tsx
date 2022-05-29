@@ -2,26 +2,25 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import Button from "../utils/button.component";
-import { getDestination } from "../utils/api";
 
-export default function SelectedDestination(props) {
+export default function SelectedCar(props) {
   const { name } = props;
 
   // const [selectedDestination, setDestination] = useState({name: '', classificationOrder: 0});
   const {
     isLoading,
-    data: selectedDestination,
+    data: selectedCar,
     refetch,
     isFetched,
   } = useQuery(
-    "getDestination",
+    "getCar",
     async () => {
-      return await axios.get(`http://localhost:8081/destination/${name}`);
+      return await axios.get(`http://localhost:8081/car/${name}`);
     },
     {
       enabled: true,
       onSuccess: (data) => {
-        // console.log(data.data)
+        //console.log(data.data)
       },
     }
   );
@@ -38,15 +37,15 @@ export default function SelectedDestination(props) {
   
   const {mutate:updateData}=useUpdateDestination()*/
 
-  const deleteDestination = async (id) => {
-    return await axios.delete(`http://localhost:8081/destination/${id}`);
+  const deleteCar = async (id) => {
+    return await axios.delete(`http://localhost:8081/car/${id}`);
   };
 
-  const useDeleteDestination = () => {
-    return useMutation(deleteDestination);
+  const useDeleteCar = () => {
+    return useMutation(deleteCar);
   };
 
-  const { mutate: deleteData } = useDeleteDestination();
+  const { mutate: deleteData } = useDeleteCar();
 
   useEffect(() => {
     //setDestination({name: '', classificationOrder: 0})
@@ -55,7 +54,7 @@ export default function SelectedDestination(props) {
     }
   }, [name]);
 
-  if (!selectedDestination || !selectedDestination.data.name) {
+  if (!selectedCar || !selectedCar.data.name) {
     return <div>Click on a destination to see the details</div>;
   }
 
@@ -63,18 +62,20 @@ export default function SelectedDestination(props) {
     <div>
       <div className="flex">
         <div className="pr-6 w-60 font-bold">City Name</div>
-        <div>{selectedDestination && selectedDestination.data.name}</div>
+        <div>{selectedCar && selectedCar.data.name}</div>
       </div>
       <div className="flex">
         <div className="pr-6 w-60 font-bold">Classification Order</div>
-        <div>
-          {selectedDestination && selectedDestination.data.classificationOrder}
-        </div>
+        <div>{selectedCar && selectedCar.data.destination.name}</div>
+      </div>
+      <div className="flex">
+        <div className="pr-6 w-60 font-bold">Receiver</div>
+        <div>{selectedCar && selectedCar.data.receiver.name}</div>
       </div>
       <div>
         <Button
           onClick={() => {
-            selectedDestination && deleteData(selectedDestination.data.name);
+            selectedCar && deleteData(selectedCar.data.name);
             props.reload((prev) => !prev);
           }}
         >

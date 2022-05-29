@@ -2,11 +2,11 @@ import React, { Fragment } from "react";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 
-function DestinationsList(props) {
+function CarsList(props) {
   return (
     <div className="planetList">
       {props.data &&
-        props.data.map((destination, i) => {
+        props.data.map((car, i) => {
           let borderClass = "border-b";
           if (i === 0) {
             borderClass = "border-t border-b";
@@ -15,11 +15,11 @@ function DestinationsList(props) {
           }
           return (
             <Link
-              key={destination.name}
+              key={car.name}
               className={`h-12 flex items-center ${borderClass} border-white cursor-pointer no-underline`}
-              to={`/destination/${destination.name}`}
+              to={`/car/${car.name}`}
             >
-              {destination.name}
+              {car.name}
             </Link>
           );
         })}
@@ -28,4 +28,4 @@ function DestinationsList(props) {
   );
 }
 
-export default DestinationsList;
+export default CarsList;
