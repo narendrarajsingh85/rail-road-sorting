@@ -8,12 +8,13 @@ import Destination from "./destination";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 
 export default function LandingPage(props) {
   const [reload, setReload] = useState(true);
   const [isUpdteCall, setUpdateCall] = useState(false);
+  const queryClient = useQueryClient();
 
   // const [state, dispatch] = useReducer(reducer, initialState);
   const [type, setType] = useState("selected");
@@ -68,7 +69,15 @@ export default function LandingPage(props) {
   };
 
   const useAddDestination = () => {
-    return useMutation(addDestination);
+    return useMutation(addDestination, {
+      onSuccess: ({ data }) => {
+        console.log(data);
+        queryClient.setQueryData("getDestinations", (oData: { data: [] }) => ({
+          ...oData,
+          data: [...oData.data, data],
+        }));
+      },
+    });
   };
 
   const { mutate: addData } = useAddDestination();
