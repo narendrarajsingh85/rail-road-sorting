@@ -1,33 +1,17 @@
-import { useState } from "react";
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import LandingPage from "./receiver/receiver-landing";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
-export default function Root() {
-  const [name, setName] = useState("");
-  const [list, setList] = useState([]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const data = { name };
-    if (name) {
-      setList((ls) => [...list, data]);
-      setName("");
-    }
-  };
-
+export default function Root(props) {
+  const queryClient = new QueryClient();
   return (
-    <div>
-      <h1>Receiver</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          name="name"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button>Add Item</button>
-      </form>
-      {list.map((a, index) => (
-        <li key={index}>{a.name}</li>
-      ))}
-    </div>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <Route path="/receiver" component={LandingPage}></Route>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 }
