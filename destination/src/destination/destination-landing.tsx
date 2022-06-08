@@ -107,7 +107,10 @@ export default function LandingPage(props) {
           <div className="destination">
             {type === "selected" && (
               <SelectedDestination
-                reload={setReload}
+                onDelete={() => {
+                  history.goBack();
+                  setType("");
+                }}
                 name={path !== "destination" ? path : ""}
               />
             )}

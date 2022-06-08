@@ -107,7 +107,10 @@ export default function LandingPage(props) {
           <div className="receiver">
             {type === "selected" && (
               <SelectedReceiver
-                reload={setReload}
+                onDelete={() => {
+                  history.goBack();
+                  setType("");
+                }}
                 name={path !== "receiver" ? path : ""}
               />
             )}

@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import Button from "../utils/button.component";
 import { getDestination } from "../utils/api";
 
 export default function SelectedDestination(props) {
-  const { name } = props;
+  const { name, onDelete } = props;
+  const queryClient = useQueryClient();
 
   // const [selectedDestination, setDestination] = useState({name: '', classificationOrder: 0});
   const {
@@ -38,12 +39,25 @@ export default function SelectedDestination(props) {
   
   const {mutate:updateData}=useUpdateDestination()*/
 
-  const deleteDestination = async (id) => {
-    return await axios.delete(`http://localhost:8081/destination/${id}`);
+  const deleteDestination = (e) => {
+    return axios.delete(`http://localhost:8081/destination/${e.target.name}`);
   };
 
   const useDeleteDestination = () => {
-    return useMutation(deleteDestination);
+    return useMutation(deleteDestination, {
+      onSuccess: ({ data }) => {
+        console.log(data);
+        queryClient.setQueryData(
+          "getDestinations",
+          (oData: { data: [{ name: string }] }) => ({
+            ...oData,
+            data: oData.data.filter((d) => d.name !== data.name),
+          })
+        );
+
+        onDelete && onDelete(data);
+      },
+    });
   };
 
   const { mutate: deleteData } = useDeleteDestination();
@@ -72,12 +86,7 @@ export default function SelectedDestination(props) {
         </div>
       </div>
       <div>
-        <Button
-          onClick={() => {
-            selectedDestination && deleteData(selectedDestination.data.name);
-            props.reload((prev) => !prev);
-          }}
-        >
+        <Button onClick={deleteData} name={selectedDestination.data.name}>
           Delete
         </Button>
         {/*

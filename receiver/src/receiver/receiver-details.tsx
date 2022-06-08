@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import Button from "../utils/button.component";
 // import { getReceiver } from "../utils/api";
 
 export default function SelectedReceiver(props) {
-  const { name } = props;
+  const { name, onDelete } = props;
+  const queryClient = useQueryClient();
 
   // const [selectedReceiver, setReceiver] = useState({name: '', sortOrder: 0});
   const {
@@ -38,12 +39,25 @@ export default function SelectedReceiver(props) {
   
   const {mutate:updateData}=useUpdateReceiver()*/
 
-  const deleteReceiver = async (id) => {
-    return await axios.delete(`http://localhost:8081/receiver/${id}`);
+  const deleteReceiver = (e) => {
+    return axios.delete(`http://localhost:8081/receiver/${e.target.name}`);
   };
 
   const useDeleteReceiver = () => {
-    return useMutation(deleteReceiver);
+    return useMutation(deleteReceiver, {
+      onSuccess: ({ data }) => {
+        console.log(data);
+        queryClient.setQueryData(
+          "getReceivers",
+          (oData: { data: [{ name: string }] }) => ({
+            ...oData,
+            data: oData.data.filter((d) => d.name !== data.name),
+          })
+        );
+
+        onDelete && onDelete(data);
+      },
+    });
   };
 
   const { mutate: deleteData } = useDeleteReceiver();
@@ -67,17 +81,10 @@ export default function SelectedReceiver(props) {
       </div>
       <div className="flex">
         <div className="pr-6 w-60 font-bold">Sort Order</div>
-        <div>
-          {selectedReceiver && selectedReceiver.data.sortOrder}
-        </div>
+        <div>{selectedReceiver && selectedReceiver.data.sortOrder}</div>
       </div>
       <div>
-        <Button
-          onClick={() => {
-            selectedReceiver && deleteData(selectedReceiver.data.name);
-            props.reload((prev) => !prev);
-          }}
-        >
+        <Button onClick={deleteData} name={selectedReceiver.data.name}>
           Delete
         </Button>
         {/*
