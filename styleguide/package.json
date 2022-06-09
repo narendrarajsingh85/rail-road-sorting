@@ -1,6 +1,7 @@
 {
   "name": "bootcamp-styleguide",
   "license": "MIT",
+  "version": "1.0.0",
   "scripts": {
     "start": "webpack serve --port 9002",
     "build": "webpack --mode=production",

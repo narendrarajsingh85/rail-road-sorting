@@ -1,5 +1,6 @@
 {
   "name": "@bootcamp/navbar",
+  "version": "1.0.0",
   "scripts": {
     "start": "webpack serve --port 9003",
     "start:standalone": "webpack serve --env standalone",
@@ -11,7 +12,7 @@
     "check-format": "prettier --check .",
     "test": "cross-env BABEL_ENV=test jest",
     "watch-tests": "cross-env BABEL_ENV=test jest --watch",
-    "prepare": "husky install",
+    "prepare": "cd .. && yarn husky install ./nabbar/.husky",
     "coverage": "cross-env BABEL_ENV=test jest --coverage",
     "build:types": "tsc"
   },

@@ -1,5 +1,6 @@
 {
   "name": "@bootcamp/destination",
+  "version": "1.0.0",
   "scripts": {
     "start": "webpack serve --port 9004",
     "start:standalone": "webpack serve --env standalone",
@@ -11,7 +12,7 @@
     "check-format": "prettier --check .",
     "test": "cross-env BABEL_ENV=test jest",
     "watch-tests": "cross-env BABEL_ENV=test jest --watch",
-    "prepare": "husky install",
+    "prepare": "cd .. && yarn husky install ./destination/.husky",
     "coverage": "cross-env BABEL_ENV=test jest --coverage",
     "build:types": "tsc",
     "storybook": "start-storybook -p 6006",
