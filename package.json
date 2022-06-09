@@ -6,6 +6,7 @@
     "husky": "^8.0.0"
   },
   "scripts": {
+    "start": "lerna run start",
     "prepare": "husky install"
   }
 }
