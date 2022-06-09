@@ -1,9 +1,29 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 import Button from "../utils/button.component";
 
 export default function Car(props) {
   const { handleSubmit } = props;
   const [value, setValue] = useState({});
+  const [destinations, setDestinations] = useState([]);
+  const [receivers, setReceivers] = useState([]);
+
+  useQuery(
+    "destinations",
+    () => axios.get("http://localhost:8081/destination"),
+    {
+      onSuccess: (data) => { setDestinations(data.data); },
+    }
+  );
+
+  useQuery(
+    "receivers",
+    () => axios.get("http://localhost:8081/receiver"),
+    {
+      onSuccess: (data) => { setReceivers(data.data); },
+    }
+  );
 
   const submit = async (e) => {
     e.preventDefault();
@@ -46,14 +66,17 @@ export default function Car(props) {
           >
             Destination Name
           </label>
-          <input
-            className="shadow appearance-none border text-gray rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={(e) => onChange(e)}
-            id="name"
-            type="text"
+          <select
             name="destination"
-            placeholder="Destination"
-          />
+            id="destination"
+            className="shadow appearance-none border text-gray rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+            onChange={onChange}
+          >
+            <option value="">Select a destination</option>
+            {destinations.map((d) => (
+              <option value={d.name}>{d.name}</option>
+            ))}
+          </select>
         </div>
 
         <div className="mb-4">
@@ -63,14 +86,17 @@ export default function Car(props) {
           >
             Receiver Name
           </label>
-          <input
-            className="shadow appearance-none border text-gray rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={(e) => onChange(e)}
-            id="name"
-            type="text"
+          <select
             name="receiver"
-            placeholder="Receiver"
-          />
+            id="receiver"
+            className="shadow appearance-none border text-gray rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+            onChange={onChange}
+          >
+            <option value="">Select a receiver</option>
+            {receivers.map((r) => (
+              <option value={r.name}>{r.name}</option>
+            ))}
+          </select>
         </div>
         <div className="flex items-center">
           <Button type="submit">Add</Button>

@@ -32,7 +32,6 @@ export default function LandingPage(props) {
     {
       enabled: false,
       onSuccess: (data) => {
-        console.log(data.data);
         setDestinations(data.data);
       },
     }
@@ -71,7 +70,6 @@ export default function LandingPage(props) {
   const useAddDestination = () => {
     return useMutation(addDestination, {
       onSuccess: ({ data }) => {
-        console.log(data);
         queryClient.setQueryData("getDestinations", (oData: { data: [] }) => ({
           ...oData,
           data: [...oData.data, data],

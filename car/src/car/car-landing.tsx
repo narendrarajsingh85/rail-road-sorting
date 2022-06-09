@@ -7,13 +7,14 @@ import Car from "./car";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import SelectedCar from "./car-details";
 
 export default function LandingPage(props) {
   const [reload, setReload] = useState(true);
   const [isUpdteCall, setUpdateCall] = useState(false);
+  const queryClient = useQueryClient();
 
   // const [state, dispatch] = useReducer(reducer, initialState);
   const [type, setType] = useState("selected");
@@ -31,7 +32,6 @@ export default function LandingPage(props) {
     {
       enabled: false,
       onSuccess: (data) => {
-        console.log(data.data);
         setCars(data.data);
       },
     }
@@ -68,7 +68,15 @@ export default function LandingPage(props) {
   };
 
   const useAddCar = () => {
-    return useMutation(addCar);
+    return useMutation(addCar, {
+      onSuccess: ({ data }) => {
+        console.log(data);
+        queryClient.setQueryData("getCars", (oData: { data: [] }) => ({
+          ...oData,
+          data: [...oData.data, data],
+        }));
+      },
+    });
   };
 
   const { mutate: addData } = useAddCar();
