@@ -70,7 +70,6 @@ export default function LandingPage(props) {
   const useAddCar = () => {
     return useMutation(addCar, {
       onSuccess: ({ data }) => {
-        console.log(data);
         queryClient.setQueryData("getCars", (oData: { data: [] }) => ({
           ...oData,
           data: [...oData.data, data],
@@ -102,7 +101,10 @@ export default function LandingPage(props) {
           <div className="destination">
             {type === "selected" && (
               <SelectedCar
-                reload={setReload}
+              onDelete={() => {
+                history.goBack();
+                setType("");
+              }}
                 name={path !== "car" ? path : ""}
               />
             )}

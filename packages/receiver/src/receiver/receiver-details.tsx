@@ -46,7 +46,6 @@ export default function SelectedReceiver(props) {
   const useDeleteReceiver = () => {
     return useMutation(deleteReceiver, {
       onSuccess: ({ data }) => {
-        console.log(data);
         queryClient.setQueryData(
           "getReceivers",
           (oData: { data: [{ name: string }] }) => ({

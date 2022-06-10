@@ -32,7 +32,6 @@ export default function LandingPage(props) {
     {
       enabled: false,
       onSuccess: (data) => {
-        console.log(data.data);
         setReceivers(data.data);
       },
     }
@@ -71,7 +70,6 @@ export default function LandingPage(props) {
   const useAddReceiver = () => {
     return useMutation(addReceiver, {
       onSuccess: ({ data }) => {
-        console.log(data);
         queryClient.setQueryData("getReceivers", (oData: { data: [] }) => ({
           ...oData,
           data: [...oData.data, data],

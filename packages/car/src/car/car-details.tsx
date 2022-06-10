@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import Button from "../utils/button.component";
 
 export default function SelectedCar(props) {
-  const { name } = props;
+  const { name, onDelete } = props;
+  const queryClient = useQueryClient();
 
   // const [selectedDestination, setDestination] = useState({name: '', classificationOrder: 0});
   const {
@@ -37,12 +38,24 @@ export default function SelectedCar(props) {
   
   const {mutate:updateData}=useUpdateDestination()*/
 
-  const deleteCar = async (id) => {
-    return await axios.delete(`http://localhost:8081/car/${id}`);
+  const deleteCar = (e) => {
+    return axios.delete(`http://localhost:8081/car/${e.target.name}`);
   };
 
   const useDeleteCar = () => {
-    return useMutation(deleteCar);
+    return useMutation(deleteCar, {
+      onSuccess: ({ data }) => {
+        queryClient.setQueryData(
+          "getCars",
+          (oData: { data: [{ name: string }] }) => ({
+            ...oData,
+            data: oData.data.filter((d) => d.name !== data.name),
+          })
+        );
+
+        onDelete && onDelete(data);
+      },
+    });
   };
 
   const { mutate: deleteData } = useDeleteCar();
@@ -73,12 +86,7 @@ export default function SelectedCar(props) {
         <div>{selectedCar && selectedCar.data.receiver.name}</div>
       </div>
       <div>
-        <Button
-          onClick={() => {
-            selectedCar && deleteData(selectedCar.data.name);
-            props.reload((prev) => !prev);
-          }}
-        >
+        <Button onClick={deleteData} name={selectedCar.data.name}>
           Delete
         </Button>
         {/*
